@@ -2,6 +2,7 @@ defmodule SimpleChatWeb.Router do
   use SimpleChatWeb, :router
 
   import SimpleChatWeb.CookieAuth
+  import SimpleChatWeb.Plugs.MetaTags
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -19,7 +20,7 @@ defmodule SimpleChatWeb.Router do
     plug :put_root_layout, html: {SimpleChatWeb.Layouts, :root_inertia}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
-    plug SimpleChatWeb.Plugs.SetMetaUrl
+    plug :set_meta_tag_values
     plug :fetch_cookie_user_nickname
     plug Inertia.Plug
   end
