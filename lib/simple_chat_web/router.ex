@@ -1,6 +1,8 @@
 defmodule SimpleChatWeb.Router do
   use SimpleChatWeb, :router
 
+  import SimpleChatWeb.CookieAuth
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -18,6 +20,7 @@ defmodule SimpleChatWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug SimpleChatWeb.Plugs.SetMetaUrl
+    plug :fetch_cookie_user_nickname
     plug Inertia.Plug
   end
 
@@ -34,12 +37,14 @@ defmodule SimpleChatWeb.Router do
   scope "/", SimpleChatWeb do
     pipe_through :browser_inertia
 
-    get "/", MarketingController, :home
-    get "/pricing", MarketingController, :pricing
+    get "/", MarketingController, :index
+    get "/about", MarketingController, :about
+    post "/sign_in", MarketingController, :sign_in
+    delete "/log_out", MarketingController, :log_out
   end
 
-  scope "/app", SimpleChatWeb do
-    pipe_through :browser_inertia
+  scope "/rooms", SimpleChatWeb do
+    pipe_through [:browser_inertia, :redirect_if_no_cookie_user_nickname]
 
     get "/", AdminController, :dashboard
     get "/settings", AdminController, :settings
