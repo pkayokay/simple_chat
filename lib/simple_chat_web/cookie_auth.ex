@@ -7,8 +7,6 @@ defmodule SimpleChatWeb.CookieAuth do
   @redirect_path "/"
   @signing_salt "Zk1l2OiwL-DEMO"
 
-  # def init(opts), do: opts
-
   def redirect_if_no_cookie_user_nickname(conn, _opts) do
     conn = fetch_cookies(conn)
 
