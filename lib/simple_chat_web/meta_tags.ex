@@ -1,9 +1,7 @@
-defmodule SimpleChatWeb.Plugs.SetMetaUrl do
+defmodule SimpleChatWeb.Plugs.MetaTags do
   import Plug.Conn
 
-  def init(opts), do: opts
-
-  def call(conn, _opts) do
+  def set_meta_tag_values(conn, _opts) do
     current_url = SimpleChatWeb.Endpoint.url() <> conn.request_path
     og_image_url = SimpleChatWeb.Endpoint.url() <> "/og.png"
 

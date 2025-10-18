@@ -8,13 +8,13 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
   }
 
   return (
-    <div className="p-7">
+    <div>
       <Head>
         <title>{page.props.pageTitle}</title>
       </Head>
-      <Link href="/">Back to Marketing page</Link>
-      <div className="mb-4 space-x-4">
-        <Link href="/app">Dashboard</Link> <Link href="/app/settings">Settings</Link>
+      <div>
+        <Link href="/">Back to Sign in Page</Link>
+        <br />
       </div>
       <main>{children}</main>
     </div>

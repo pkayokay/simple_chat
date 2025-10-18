@@ -1,17 +1,33 @@
 defmodule SimpleChatWeb.MarketingController do
   use SimpleChatWeb, :controller
 
-  def home(conn, _params) do
+  @ssr System.get_env("MIX_ENV") == "prod"
+
+  def index(conn, _params) do
     conn
-    |> SimpleChatWeb.PageTitle.assign("This is the marketing home page")
-    |> assign_prop(:ssr, System.get_env("MIX_ENV") == "prod")
-    |> render_inertia("marketing/home", ssr: System.get_env("MIX_ENV") == "prod")
+    |> SimpleChatWeb.PageTitle.assign("Simple Chat - Home")
+    |> assign_prop(:ssr, @ssr)
+    |> render_inertia("marketing/index", ssr: @ssr)
   end
 
-  def pricing(conn, _params) do
+  def about(conn, _params) do
     conn
-    |> SimpleChatWeb.PageTitle.assign("This is the marketing pricing page")
-    |> assign_prop(:ssr, System.get_env("MIX_ENV") == "prod")
-    |> render_inertia("marketing/pricing", ssr: System.get_env("MIX_ENV") == "prod")
+    |> SimpleChatWeb.PageTitle.assign("Simple Chat - About")
+    |> assign_prop(:ssr, @ssr)
+    |> render_inertia("marketing/about", ssr: @ssr)
+  end
+
+  def sign_in(conn, %{"nickname" => nickname}) do
+    conn
+    |> SimpleChatWeb.CookieAuth.set_cookie_user_nickname(nickname)
+    |> put_flash(:info, "Sign in as #{nickname}")
+    |> redirect(to: "/rooms")
+  end
+
+  def log_out(conn, _params) do
+    conn
+    |> SimpleChatWeb.CookieAuth.delete_cookie_user_nickname()
+    |> put_flash(:info, "You have been logged out.")
+    |> redirect(to: "/")
   end
 end
