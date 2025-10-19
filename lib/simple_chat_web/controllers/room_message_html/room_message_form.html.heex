@@ -1,0 +1,9 @@
+<.form :let={f} for={@changeset} action={@action}>
+  <.input field={f[:user_id]} type="text" label="User" />
+  <.input field={f[:user_nickname]} type="text" label="User nickname" />
+  <.input field={f[:content]} type="text" label="Content" />
+  <footer>
+    <.button variant="primary">Save Room message</.button>
+    <.button :if={@return_to} href={@return_to}>Cancel</.button>
+  </footer>
+</.form>

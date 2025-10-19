@@ -18,4 +18,20 @@ defmodule SimpleChat.RoomsFixtures do
 
     room
   end
+
+  @doc """
+  Generate a room_message.
+  """
+  def room_message_fixture(attrs \\ %{}) do
+    {:ok, room_message} =
+      attrs
+      |> Enum.into(%{
+        content: "some content",
+        user_id: "some user_id",
+        user_nickname: "some user_nickname"
+      })
+      |> SimpleChat.Rooms.create_room_message()
+
+    room_message
+  end
 end

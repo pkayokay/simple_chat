@@ -49,6 +49,8 @@ defmodule SimpleChatWeb.Router do
 
     resources "/rooms", RoomController, except: [:edit, :show]
     get "/rooms/:slug", RoomController, :show
+    # resources "/room_messages", MessageController, only: [:create]
+    post "/room_messages", RoomMessageController, :create
   end
 
   # Other scopes may use custom stacks.

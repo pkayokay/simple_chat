@@ -1,0 +1,27 @@
+<Layouts.app flash={@flash}>
+  <.header>
+    Listing Room messages
+    <:actions>
+      <.button href={~p"/room_messages/new"}>
+        <.icon name="hero-plus" /> New Room message
+      </.button>
+    </:actions>
+  </.header>
+
+  <.table id="room_messages" rows={@room_messages} row_click={&JS.navigate(~p"/room_messages/#{&1}")}>
+    <:col :let={room_message} label="User">{room_message.user_id}</:col>
+    <:col :let={room_message} label="User nickname">{room_message.user_nickname}</:col>
+    <:col :let={room_message} label="Content">{room_message.content}</:col>
+    <:action :let={room_message}>
+      <div class="sr-only">
+        <.link navigate={~p"/room_messages/#{room_message}"}>Show</.link>
+      </div>
+      <.link navigate={~p"/room_messages/#{room_message}/edit"}>Edit</.link>
+    </:action>
+    <:action :let={room_message}>
+      <.link href={~p"/room_messages/#{room_message}"} method="delete" data-confirm="Are you sure?">
+        Delete
+      </.link>
+    </:action>
+  </.table>
+</Layouts.app>

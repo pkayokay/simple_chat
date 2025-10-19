@@ -5,7 +5,7 @@ defmodule SimpleChat.Rooms.Room do
   schema "rooms" do
     field :name, :string
     field :slug, :string
-
+    has_many :room_messages, SimpleChat.Rooms.RoomMessage
     timestamps(type: :utc_datetime)
   end
 

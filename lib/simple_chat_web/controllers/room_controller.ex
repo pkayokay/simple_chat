@@ -3,6 +3,7 @@ defmodule SimpleChatWeb.RoomController do
 
   alias SimpleChat.Rooms
   alias SimpleChat.Rooms.Room
+  alias SimpleChat.Repo
 
   def index(conn, _params) do
     rooms =
@@ -10,7 +11,7 @@ defmodule SimpleChatWeb.RoomController do
       |> Enum.map(fn room ->
         room
         |> Map.from_struct()
-        |> Map.drop([:__meta__])
+        |> Map.drop([:__meta__, :room_messages])
       end)
 
     conn
@@ -42,7 +43,13 @@ defmodule SimpleChatWeb.RoomController do
   end
 
   def show(conn, %{"slug" => slug}) do
-    room = Rooms.get_room(slug)
+    room =
+      Rooms.get_room(slug)
+      |> Repo.preload(:room_messages)
+
+    room_messages =
+      room.room_messages
+      |> Enum.map(&(Map.from_struct(&1) |> Map.drop([:__meta__, :room])))
 
     case room do
       nil ->
@@ -54,6 +61,7 @@ defmodule SimpleChatWeb.RoomController do
         conn
         |> SimpleChatWeb.PageTitle.assign(room.name)
         |> assign_prop(:room, %{id: room.id, name: room.name, slug: room.slug})
+        |> assign_prop(:room_messages, room_messages)
         |> render_inertia("rooms/show")
     end
   end

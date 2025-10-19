@@ -1,0 +1,8 @@
+<Layouts.app flash={@flash}>
+  <.header>
+    New Room message
+    <:subtitle>Use this form to manage room_message records in your database.</:subtitle>
+  </.header>
+
+  <.room_message_form changeset={@changeset} action={~p"/room_messages"} return_to={~p"/room_messages"} />
+</Layouts.app>
