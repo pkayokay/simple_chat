@@ -18,17 +18,18 @@ type UserType = {
 };
 
 const RoomsShow = ({ room, roomMessages }: { room: RoomType; roomMessages: RoomMessageType[] }) => {
+  const [roomMessagesState, setRoomMessagesState] = useState<RoomMessageType[]>(roomMessages);
   const page = usePage<{ currentUrl: string; currentUser: { id: string; nickname: string } }>();
   const { currentUrl, currentUser } = page.props;
   const ref = useRef<HTMLDivElement>(null);
-
-  console.log("Room messages:", roomMessages);
-  const { data, post, setData, transform } = useForm({
+  const [values, setValues] = useState({
     content: "",
     room_id: room.id,
     user_id: currentUser.id,
     user_nickname: currentUser.nickname,
   });
+
+  console.log("Room messages:", roomMessagesState);
 
   useEffect(() => {
     if (ref.current) {
@@ -76,22 +77,37 @@ const RoomsShow = ({ room, roomMessages }: { room: RoomType; roomMessages: RoomM
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    transform((data) => ({
-      room_message: {
-        ...data,
-      },
-    }));
-    post("/room_messages", {
-      onSuccess: () => {
-        setData("content", "");
+    const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content");
 
-        setTimeout(() => {
-          if (ref.current) {
-            ref.current.scrollTop = ref.current.scrollHeight;
-          }
-        }, 0); // wait until DOM updates
+    fetch("/room_messages", {
+      body: JSON.stringify({ room_message: values }),
+      headers: {
+        "Content-Type": "application/json",
+        "x-csrf-token": csrfToken,
       },
-      preserveScroll: true,
+      method: "POST",
+    }).then((response) => {
+      setRoomMessagesState([
+        ...roomMessagesState,
+        {
+          content: values.content,
+          id: crypto.randomUUID(), // temporary client ID
+          insertedAt: new Date().toISOString(),
+          userId: currentUser.id,
+          userNickname: currentUser.nickname,
+        },
+      ]);
+      setValues({ ...values, content: "" });
+      setTimeout(() => {
+        if (ref.current) {
+          ref.current.scrollTop = ref.current.scrollHeight;
+        }
+      }, 300);
+      // if (response.ok) {
+      //   console.error("Failed to send message");
+      // } else {
+
+      // }
     });
   };
 
@@ -114,22 +130,27 @@ const RoomsShow = ({ room, roomMessages }: { room: RoomType; roomMessages: RoomM
           👥 {onlineUsers.length} {onlineUsers.length === 1 ? "person" : "people"} online
           <div className="mt-1">
             {onlineUsers.map((user) => (
-              <p className="text-lg font-semibold" key={user.id}>
+              <p className="text-lg font-semibold" key={`${user.id}-${user.nickname}`}>
                 <span className="mr-2 inline-block h-2 w-2 animate-pulse rounded-full bg-green-500"></span>
                 <span>{user.nickname}</span>
               </p>
             ))}
           </div>
         </div>
-        <div ref={ref} className="h-[400px] space-y-4 overflow-y-auto rounded-md border border-neutral-300 p-4">
-          {roomMessages.map((message: RoomMessageType) => {
-            const isCurrentUser = message.userId === currentUser.id; // replace currentUser.id with your current user state
+        <div className="h-[400px] space-y-4 overflow-y-auto rounded-md border border-neutral-300 p-4" ref={ref}>
+          {roomMessagesState.map((message: RoomMessageType) => {
+            const isCurrentUser = message.userId === currentUser.id || message.userId === 0; // replace currentUser.id with your current user state
 
             return (
-              <div className={`flex ${isCurrentUser ? "justify-end" : "justify-start"}`} key={message.id}>
+              <div
+                className={`flex ${isCurrentUser ? "justify-end" : "justify-start"}`}
+                key={`${message.userNickname}-${message.userId}`}
+                key={message.id}
+              >
                 <div
                   className={`w-full max-w-[70%] break-words rounded-md p-2 ${isCurrentUser ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-900"}`}
                 >
+                  <p>{message.userId}</p>
                   <p>{message.content}</p>
                   <p className="mt-1 text-xs opacity-70">{message.userNickname}</p>
                   <p className="mt-1 text-right text-xs opacity-70">{message.insertedAt}</p>
@@ -144,12 +165,12 @@ const RoomsShow = ({ room, roomMessages }: { room: RoomType; roomMessages: RoomM
           <input
             className="input--default w-full"
             name="content"
-            onChange={(e) => setData("content", e.target.value)}
+            onChange={(e) => setValues({ ...values, content: e.target.value })}
             placeholder="Type your message..."
             type="text"
-            value={data.content}
+            value={values.content}
           />
-          <button className="button--primary mt-2 w-full" disabled={!data.content.trim()} type="submit">
+          <button className="button--primary mt-2 w-full" disabled={!values.content.trim()} type="submit">
             Send
           </button>
         </form>

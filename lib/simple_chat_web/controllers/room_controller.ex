@@ -33,12 +33,15 @@ defmodule SimpleChatWeb.RoomController do
     case Rooms.create_room(room_params) do
       {:ok, room} ->
         conn
-        |> redirect(to: ~p"/rooms/#{room.slug}")
+        |> json(%{
+          success: true,
+          room: %{id: room.id, name: room.name, slug: room.slug}
+        })
 
       {:error, %Ecto.Changeset{} = changeset} ->
         conn
         |> assign_errors(changeset)
-        |> redirect(to: ~p"/rooms/new")
+        |> json(%{success: false, errors: changeset})
     end
   end
 
