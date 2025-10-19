@@ -34,8 +34,9 @@ const RoomsShow = ({ room }: { room: RoomType }) => {
         });
       });
 
-      // Remove duplicates based on id
+      // Sort alphabetically by nickname and pull out unique users
       const uniqueUsers = Array.from(new Map(allMetas.map((user) => [user.id, user])).values());
+      uniqueUsers.sort((a, b) => a.nickname.localeCompare(b.nickname));
 
       setOnlineUsers(uniqueUsers);
     });
