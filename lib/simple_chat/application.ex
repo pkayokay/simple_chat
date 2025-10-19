@@ -18,7 +18,8 @@ defmodule SimpleChat.Application do
       # You must specify a `path` option to locate the directory where the `ssr.js` file lives.
       {Inertia.SSR, path: Path.join([Application.app_dir(:simple_chat), "priv"])},
       # Start to serve requests, typically the last entry
-      SimpleChatWeb.Endpoint
+      SimpleChatWeb.Endpoint,
+      SimpleChatWeb.Presence
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
