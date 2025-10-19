@@ -44,10 +44,13 @@ defmodule SimpleChatWeb.Router do
     delete "/log_out", MarketingController, :log_out
   end
 
-  scope "/rooms", SimpleChatWeb do
+  scope "/", SimpleChatWeb do
     pipe_through [:browser_inertia, :redirect_if_no_cookie_user_nickname]
 
-    get "/", AdminController, :dashboard
+    resources "/rooms", RoomController, except: [:edit, :show]
+    get "/rooms/:slug", RoomController, :show
+
+    get "/dashboard", AdminController, :dashboard
     get "/settings", AdminController, :settings
   end
 

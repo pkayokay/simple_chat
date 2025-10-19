@@ -20,14 +20,12 @@ defmodule SimpleChatWeb.MarketingController do
   def sign_in(conn, %{"nickname" => nickname}) do
     conn
     |> SimpleChatWeb.CookieAuth.set_cookie_user_nickname(nickname)
-    |> put_flash(:info, "Sign in as #{nickname}")
-    |> redirect(to: "/rooms")
+    |> redirect(to: "/rooms/new")
   end
 
   def log_out(conn, _params) do
     conn
     |> SimpleChatWeb.CookieAuth.delete_cookie_user_nickname()
-    |> put_flash(:info, "You have been logged out.")
     |> redirect(to: "/")
   end
 end
