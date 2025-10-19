@@ -4,8 +4,8 @@ import { useState } from "react";
 import { Heading } from "../ui/heading";
 
 const MarketingIndex = () => {
-  const page = usePage<{ cookieUserNickname: null | string }>();
-  const { cookieUserNickname } = page.props;
+  const page = usePage<{ currentUser: { id: string; nickname: string } | null }>();
+  const { currentUser } = page.props;
   const [disabled, setDisabled] = useState(true);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -15,9 +15,9 @@ const MarketingIndex = () => {
   return (
     <div className="mt-16 text-center">
       <Heading text="Welcome to Simple Chat" />
-      {cookieUserNickname ? (
+      {currentUser ? (
         <p className="mt-3">
-          You are signed in as {cookieUserNickname}. Click{" "}
+          You are signed in as {currentUser.nickname}. Click{" "}
           <Link className="text-blue-600 underline hover:text-blue-700 focus:text-blue-700" href="/rooms">
             here
           </Link>{" "}

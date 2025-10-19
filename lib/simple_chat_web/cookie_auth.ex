@@ -26,7 +26,11 @@ defmodule SimpleChatWeb.CookieAuth do
     two_weeks_in_seconds = 14 * 24 * 60 * 60
 
     # Encrypt the nickname using the signing salt
-    encrypted_nickname = Phoenix.Token.encrypt(SimpleChatWeb.Endpoint, @signing_salt, nickname)
+    encrypted_nickname =
+      Phoenix.Token.encrypt(SimpleChatWeb.Endpoint, @signing_salt, %{
+        nickname: nickname,
+        id: Nanoid.generate(10)
+      })
 
     put_resp_cookie(conn, @cookie_name, encrypted_nickname,
       max_age: two_weeks_in_seconds,
@@ -41,11 +45,11 @@ defmodule SimpleChatWeb.CookieAuth do
 
   def fetch_cookie_user_nickname(conn, _opts) do
     case get_decrypted_nickname(conn) do
-      {:ok, nickname} ->
-        assign_prop(conn, :cookie_user_nickname, nickname)
+      {:ok, %{nickname: nickname, id: id}} ->
+        assign_prop(conn, :current_user, %{nickname: nickname, id: id})
 
       {:error, _reason} ->
-        assign_prop(conn, :cookie_user_nickname, nil)
+        assign_prop(conn, :current_user, nil)
     end
   end
 
