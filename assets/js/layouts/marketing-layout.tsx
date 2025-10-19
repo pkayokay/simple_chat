@@ -1,8 +1,8 @@
 import { Head, Link, usePage } from "@inertiajs/react";
 
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
-  const page = usePage<{ cookieUserNickname: null | string; flash: { error?: string; info?: string }; pageTitle: string }>();
-  const { cookieUserNickname, flash, pageTitle } = page.props;
+  const page = usePage<{ currentUser: { id: string; nickname: string } | null; flash: { error?: string; info?: string }; pageTitle: string }>();
+  const { currentUser, flash, pageTitle } = page.props;
   const flashMessage = flash.info || flash.error;
   if (flashMessage) {
     alert(flashMessage);
@@ -24,7 +24,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
           <Link className="text-blue-500 hover:text-blue-600 hover:underline focus:text-blue-600" href="/rooms">
             Rooms
           </Link>
-          {cookieUserNickname && (
+          {currentUser && (
             <Link className="text-blue-500 hover:text-blue-600 hover:underline focus:text-blue-600" href="/log_out" method="delete">
               Log out
             </Link>
