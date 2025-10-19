@@ -1,4 +1,4 @@
-import { Head, Link, usePage } from "@inertiajs/react";
+import { Head, usePage } from "@inertiajs/react";
 
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
   const page = usePage<{ flash: { error?: string; info?: string }; pageTitle: string }>();
@@ -8,14 +8,10 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
   }
 
   return (
-    <div>
+    <div className="p-5">
       <Head>
         <title>{page.props.pageTitle}</title>
       </Head>
-      <div>
-        <Link href="/">Back to Sign in Page</Link>
-        <br />
-      </div>
       <main>{children}</main>
     </div>
   );

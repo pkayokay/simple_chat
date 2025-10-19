@@ -4,8 +4,8 @@ export const resolvePageWithLayout = async (name) => {
   const page = await import(`./pages/${name}.tsx`);
 
   const layoutMap = {
-    "admin/": "admin-layout",
     "marketing/": "marketing-layout",
+    "rooms/": "admin-layout",
   };
 
   // Find matching layout key (e.g. "admin/")
