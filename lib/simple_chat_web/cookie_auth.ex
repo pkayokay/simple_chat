@@ -15,9 +15,16 @@ defmodule SimpleChatWeb.CookieAuth do
         conn
 
       {:error, _reason} ->
+        return_to =
+          case conn.query_string do
+            "" -> conn.request_path
+            qs -> conn.request_path <> "?" <> qs
+          end
+          |> URI.encode_www_form()
+
         conn
         |> put_flash(:error, "Please set your nickname before continuing.")
-        |> redirect(to: @redirect_path)
+        |> redirect(to: "#{@redirect_path}?return_to=#{return_to}")
         |> halt()
     end
   end

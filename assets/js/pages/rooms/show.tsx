@@ -28,8 +28,8 @@ const RoomsShow = ({ room }: { room: RoomType }) => {
 
       // Flatten all metas
       const allMetas: UserType[] = [];
-      Object.values(list).forEach((entry: any) => {
-        entry.metas.forEach((meta: any) => {
+      Object.values(list).forEach((entry: { metas: UserType[] }) => {
+        entry.metas.forEach((meta) => {
           allMetas.push({ id: meta.id, nickname: meta.nickname });
         });
       });

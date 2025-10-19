@@ -17,10 +17,19 @@ defmodule SimpleChatWeb.MarketingController do
     |> render_inertia("marketing/about", ssr: @ssr)
   end
 
-  def sign_in(conn, %{"nickname" => nickname}) do
+  def sign_in(conn, params) do
+    nickname = params["nickname"]
+
+    redirect_to =
+      case params["return_to"] do
+        "" -> "/"
+        nil -> "/"
+        return_to -> return_to
+      end
+
     conn
     |> SimpleChatWeb.CookieAuth.set_cookie_user_nickname(nickname)
-    |> redirect(to: "/rooms")
+    |> redirect(to: redirect_to)
   end
 
   def log_out(conn, _params) do

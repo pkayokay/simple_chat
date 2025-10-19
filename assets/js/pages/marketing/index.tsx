@@ -11,6 +11,7 @@ const MarketingIndex = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDisabled(!e.target.value?.trim());
   };
+  const returnToParams = new URLSearchParams(window.location.search).get("return_to") || "";
 
   return (
     <div className="mt-16 text-center">
@@ -29,6 +30,7 @@ const MarketingIndex = () => {
           <label className="label--default" htmlFor="nickname">
             Nickname
           </label>
+          <input name="return_to" type="hidden" value={returnToParams} />
           <input
             autoFocus
             className="input--default"
