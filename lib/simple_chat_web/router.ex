@@ -49,9 +49,6 @@ defmodule SimpleChatWeb.Router do
 
     resources "/rooms", RoomController, except: [:edit, :show]
     get "/rooms/:slug", RoomController, :show
-
-    get "/dashboard", AdminController, :dashboard
-    get "/settings", AdminController, :settings
   end
 
   # Other scopes may use custom stacks.
