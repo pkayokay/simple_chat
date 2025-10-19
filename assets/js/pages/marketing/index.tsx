@@ -12,34 +12,37 @@ const MarketingIndex = () => {
     setDisabled(!e.target.value?.trim());
   };
 
-  if (cookieUserNickname) {
-    return (
-      <div>
-        <Heading text={`Welcome back, ${cookieUserNickname}!`} />
-        <Form action="/log_out" method="delete">
-          <button className="underline" type="submit">
-            Log Out
+  return (
+    <div className="mt-16 text-center">
+      <Heading text="Welcome to Simple Chat" />
+      {cookieUserNickname ? (
+        <p className="mt-3">
+          You are signed in as {cookieUserNickname}. Click{" "}
+          <Link className="text-blue-600 underline hover:text-blue-700 focus:text-blue-700" href="/rooms">
+            here
+          </Link>{" "}
+          to see all rooms
+        </p>
+      ) : (
+        <Form action="/sign_in" method="post">
+          <p className="mb-3 mt-6 text-lg">Enter a nickname to start chatting</p>
+          <label className="label--default" htmlFor="nickname">
+            Nickname
+          </label>
+          <input
+            autoFocus
+            className="input--default"
+            id="nickname"
+            name="nickname"
+            onChange={handleChange}
+            placeholder="Enter your nickname"
+            type="text"
+          />
+          <button className="button--primary w-full" disabled={disabled} type="submit">
+            Start Chatting
           </button>
         </Form>
-        <p>Click here to see all rooms</p>
-        <Link className="text-blue-500 underline" href="/rooms">
-          Go to Rooms
-        </Link>
-      </div>
-    );
-  }
-  return (
-    <div>
-      <Heading text="Simple Chat" />
-      <Form action="/sign_in" method="post">
-        <label htmlFor="nickname">Nickname</label>
-        <br />
-        <input autoFocus id="nickname" name="nickname" onChange={handleChange} placeholder="Enter your nickname" type="text" />
-        <br />
-        <button className="bg-black text-white disabled:opacity-50" disabled={disabled} type="submit">
-          Start Chatting
-        </button>
-      </Form>
+      )}
     </div>
   );
 };

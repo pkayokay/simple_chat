@@ -6,6 +6,7 @@ export const resolvePageWithLayout = async (name) => {
   const layoutMap = {
     "admin/": "admin-layout",
     "marketing/": "marketing-layout",
+    "rooms/": "admin-layout",
   };
 
   // Find matching layout key (e.g. "admin/")
