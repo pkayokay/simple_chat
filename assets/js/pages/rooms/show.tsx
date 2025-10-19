@@ -59,8 +59,11 @@ const RoomsShow = ({ room, roomMessages }: { room: RoomType; roomMessages: RoomM
 
       // Sort alphabetically by nickname and pull out unique users
       const uniqueUsers = Array.from(new Map(allMetas.map((user) => [user.id, user])).values());
-      uniqueUsers.sort((a, b) => a.nickname.localeCompare(b.nickname));
-
+      uniqueUsers.sort((a, b) => {
+        if (b.id === currentUser.id) return 1; // current user comes first
+        if (a.id === currentUser.id) return -1;
+        return a.nickname.localeCompare(b.nickname); // otherwise alphabetical
+      });
       setOnlineUsers(uniqueUsers);
     });
 
@@ -133,6 +136,7 @@ const RoomsShow = ({ room, roomMessages }: { room: RoomType; roomMessages: RoomM
               <p className="text-lg font-semibold" key={`${user.id}-${user.nickname}`}>
                 <span className="mr-2 inline-block h-2 w-2 animate-pulse rounded-full bg-green-500"></span>
                 <span>{user.nickname}</span>
+                {user.id === currentUser.id && " (You)"}
               </p>
             ))}
           </div>
